@@ -15,7 +15,7 @@ class BancoLocal {
 
   Future<Database> _iniciarBanco() async {
     final caminhoBanco = await getDatabasesPath();
-    final caminho = join(caminhoBanco, 'vida_de_aluno.db');
+    final caminho = join(caminhoBanco, 'vida_de_aluno_v4.db');
 
     return await openDatabase(
       caminho,
@@ -30,6 +30,7 @@ class BancoLocal {
         id INTEGER PRIMARY KEY,
         nome TEXT,
         username TEXT,
+        senha TEXT,
         email TEXT,
         telefone TEXT,
         is_professor INTEGER,
@@ -42,7 +43,7 @@ class BancoLocal {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         aluno_id INTEGER,
         disciplina TEXT,
-        nota REAL,
+        nota INTEGER,
         faltas INTEGER,
         FOREIGN KEY (aluno_id) REFERENCES usuarios (id) ON DELETE CASCADE
       )

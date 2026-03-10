@@ -13,17 +13,19 @@ class TelaLogin extends StatefulWidget {
 }
 
 class _TelaLoginState extends State<TelaLogin> {
-  final TextEditingController _controleUsuario = TextEditingController();
+  final TextEditingController _controleNome = TextEditingController();
+  final TextEditingController _controleSenha = TextEditingController();
 
   void _tentarLogin() {
     final provedor = context.read<ProvedorUsuario>();
-    final usernameDigitado = _controleUsuario.text.trim();
+    final nome = _controleNome.text.trim();
+    final senha = _controleSenha.text.trim();
 
-    if (usernameDigitado.isEmpty) {
+    if (nome.isEmpty || senha.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Color(0xFFF7C8E0),
-          content: Text('Por favor, digite seu usuário', style: TextStyle(color: Colors.black87)),
+          content: Text('Preencha o nome e a senha'),
         ),
       );
       return;
@@ -31,7 +33,7 @@ class _TelaLoginState extends State<TelaLogin> {
 
     try {
       final usuario = provedor.usuarios.firstWhere(
-        (u) => u.username.toLowerCase() == usernameDigitado.toLowerCase(),
+        (u) => u.nome.toLowerCase() == nome.toLowerCase() && u.senha == senha,
       );
 
       if (usuario.isProfessor) {
@@ -49,7 +51,7 @@ class _TelaLoginState extends State<TelaLogin> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Color(0xFFF7C8E0),
-          content: Text('Usuário não encontrado!', style: TextStyle(color: Colors.black87)),
+          content: Text('Nome ou senha incorretos!'),
         ),
       );
     }
@@ -67,41 +69,37 @@ class _TelaLoginState extends State<TelaLogin> {
             children: [
               Container(
                 padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.auto_stories_rounded, size: 80, color: Color(0xFF6DA9E4)),
+                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: const Icon(Icons.school_rounded, size: 80, color: Color(0xFF6DA9E4)),
               ),
               const SizedBox(height: 24),
               const Text(
                 'Vida de Aluno',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.black87,
-                ),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.black87),
               ),
               const SizedBox(height: 40),
               TextField(
-                controller: _controleUsuario,
+                controller: _controleNome,
                 decoration: const InputDecoration(
-                  hintText: 'Digite seu usuário',
+                  hintText: 'Nome Completo',
                   prefixIcon: Icon(Icons.person_outline),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _controleSenha,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  hintText: 'Senha',
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
+              ),
+              const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _tentarLogin,
-                  child: const Text(
-                    'ENTRAR',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
+                  child: const Text('ENTRAR'),
                 ),
               ),
               const SizedBox(height: 16),
@@ -112,10 +110,7 @@ class _TelaLoginState extends State<TelaLogin> {
                     MaterialPageRoute(builder: (context) => const TelaCadastro()),
                   );
                 },
-                child: const Text(
-                  'Criar conta agora',
-                  style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
-                ),
+                child: const Text('Novo por aqui? Cadastre-se'),
               ),
             ],
           ),
