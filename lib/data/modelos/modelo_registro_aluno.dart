@@ -2,7 +2,7 @@ class ModeloRegistroAluno {
   final int? id;
   final int alunoId;
   final String disciplina;
-  final double? nota;
+  final int? nota;
   final int? faltas;
 
   ModeloRegistroAluno({
