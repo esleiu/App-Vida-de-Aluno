@@ -5,7 +5,7 @@ import 'package:app_vida_de_aluno/provedores/provedor_usuario.dart';
 import 'package:app_vida_de_aluno/telas/tela_detalhe_aluno_professor.dart';
 import 'package:app_vida_de_aluno/data/repositorios/repositorio_registro.dart';
 import 'package:app_vida_de_aluno/data/modelos/modelo_registro_aluno.dart';
-import 'package:app_vida_de_aluno/widgets/card_aluno.dart';
+import 'package:app_vida_de_aluno/widgets/card_informativo.dart';
 import 'package:app_vida_de_aluno/widgets/campo_texto_customizado.dart';
 
 class TelaProfessor extends StatefulWidget {
@@ -86,14 +86,30 @@ class _TelaProfessorState extends State<TelaProfessor> {
                   final aluno = alunosFiltrados[index];
                   bool jaLancado = _todosRegistros.any((r) => r.alunoId == aluno.id && r.disciplina == widget.usuario.disciplinaProfessor);
                   
-                  return CardAluno(
-                    aluno: aluno,
-                    jaLancado: jaLancado,
-                    disciplinaProfessor: widget.usuario.disciplinaProfessor ?? '',
+                  return CardInformativo(
+                    titulo: aluno.nome,
+                    subtitulo: 'Matrícula: ${aluno.id}',
+                    icone: Icons.person_rounded,
+                    destaque: jaLancado,
                     onTap: () async {
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => TelaDetalheAlunoProfessor(aluno: aluno, professor: widget.usuario)));
                       _carregarDadosIniciais();
                     },
+                    acao: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: jaLancado ? Colors.green.withOpacity(0.1) : const Color(0xFFB4E4FF).withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        jaLancado ? 'EDITAR' : 'LANÇAR',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: jaLancado ? Colors.green : const Color(0xFF6DA9E4),
+                        ),
+                      ),
+                    ),
                   );
                 },
                 childCount: alunosFiltrados.length,
