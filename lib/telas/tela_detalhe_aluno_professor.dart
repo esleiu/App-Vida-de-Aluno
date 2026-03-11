@@ -4,23 +4,19 @@ import 'package:app_vida_de_aluno/data/modelos/modelo_registro_aluno.dart';
 import 'package:app_vida_de_aluno/data/repositorios/repositorio_registro.dart';
 import 'package:app_vida_de_aluno/telas/tela_adicionar_nota.dart';
 import 'package:app_vida_de_aluno/telas/tela_adicionar_faltas.dart';
+import 'package:app_vida_de_aluno/widgets/cabecalho_perfil.dart';
 
 class TelaDetalheAlunoProfessor extends StatefulWidget {
   final ModeloUsuario aluno;
   final ModeloUsuario professor;
 
-  const TelaDetalheAlunoProfessor({
-    super.key,
-    required this.aluno,
-    required this.professor,
-  });
+  const TelaDetalheAlunoProfessor({super.key, required this.aluno, required this.professor});
 
   @override
   State<TelaDetalheAlunoProfessor> createState() => _TelaDetalheAlunoProfessorState();
 }
 
 class _TelaDetalheAlunoProfessorState extends State<TelaDetalheAlunoProfessor> {
-  final _repo = RepositorioRegistro.instancia;
   ModeloRegistroAluno? _registroAtual;
 
   @override
@@ -30,7 +26,7 @@ class _TelaDetalheAlunoProfessorState extends State<TelaDetalheAlunoProfessor> {
   }
 
   void _carregarDados() async {
-    final registros = await _repo.obterRegistrosPorAluno(widget.aluno.id);
+    final registros = await RepositorioRegistro.instancia.obterRegistrosPorAluno(widget.aluno.id);
     try {
       final encontrado = registros.firstWhere(
         (r) => r.disciplina == widget.professor.disciplinaProfessor,
@@ -50,36 +46,12 @@ class _TelaDetalheAlunoProfessorState extends State<TelaDetalheAlunoProfessor> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: const Color(0xFFF0F0F0)),
-              ),
-              child: Column(
-                children: [
-                  const CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Color(0xFFE5D1FA),
-                    child: Icon(Icons.person_rounded, color: Colors.white, size: 45),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(widget.aluno.nome, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
-                  Text('Matrícula: ${widget.aluno.id}', style: const TextStyle(color: Colors.black38)),
-                  const SizedBox(height: 20),
-                  const Divider(),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildInfoStatus('Nota', _registroAtual?.nota?.toString() ?? '-'),
-                      _buildInfoStatus('Faltas', _registroAtual?.faltas?.toString() ?? '-'),
-                    ],
-                  ),
-                ],
-              ),
+            CabecalhoPerfil(
+              usuario: widget.aluno,
+              estatisticas: [
+                _buildInfoStatus('Nota', _registroAtual?.nota?.toString() ?? '-'),
+                _buildInfoStatus('Faltas', _registroAtual?.faltas?.toString() ?? '-'),
+              ],
             ),
             const SizedBox(height: 24),
             _buildAcaoCard(
@@ -134,10 +106,7 @@ class _TelaDetalheAlunoProfessorState extends State<TelaDetalheAlunoProfessor> {
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: cor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: cor.withOpacity(0.1), shape: BoxShape.circle),
                 child: Icon(icone, color: cor),
               ),
               const SizedBox(width: 16),
