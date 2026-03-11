@@ -26,6 +26,12 @@ class RepositorioRegistro {
     return List.generate(maps.length, (i) => ModeloRegistroAluno.fromMap(maps[i]));
   }
 
+  Future<List<ModeloRegistroAluno>> obterTodosRegistros() async {
+    final db = await BancoLocal.instancia.bancoDeDados;
+    final List<Map<String, dynamic>> maps = await db.query('registros_alunos');
+    return List.generate(maps.length, (i) => ModeloRegistroAluno.fromMap(maps[i]));
+  }
+
   Future<void> salvarNotaOuFalta({
     required int alunoId,
     required String disciplina,

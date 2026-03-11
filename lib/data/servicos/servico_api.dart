@@ -6,7 +6,14 @@ class ServicoApi {
   static const String _urlBase = 'https://jsonplaceholder.typicode.com/users';
 
   Future<List<ModeloUsuario>> buscarUsuarios() async {
-    final resposta = await http.get(Uri.parse(_urlBase));
+    final resposta = await http.get(
+      Uri.parse(_urlBase),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'User-Agent': 'PostmanRuntime/7.28.4',
+      },
+    );
 
     if (resposta.statusCode == 200) {
       final List<dynamic> dadosJson = json.decode(resposta.body);

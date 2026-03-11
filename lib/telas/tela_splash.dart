@@ -14,7 +14,9 @@ class _TelaSplashState extends State<TelaSplash> {
   @override
   void initState() {
     super.initState();
-    _sincronizar();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _sincronizar();
+    });
   }
 
   void _sincronizar() async {
@@ -30,15 +32,19 @@ class _TelaSplashState extends State<TelaSplash> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color(0xFFF8F9FD),
+      backgroundColor: Color(0xFF2196F3),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.auto_stories_rounded, size: 100, color: Color(0xFF6DA9E4)),
+            Icon(
+              Icons.school_rounded,
+              size: 100, 
+              color: Colors.white,
+            ),
             SizedBox(height: 40),
             CircularProgressIndicator(
-              color: Color(0xFFB4E4FF),
+              color: Colors.white,
               strokeWidth: 6,
             ),
           ],
