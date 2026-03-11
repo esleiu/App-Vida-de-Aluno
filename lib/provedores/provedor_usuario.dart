@@ -14,10 +14,12 @@ class ProvedorUsuario with ChangeNotifier {
     _carregando = true;
     notifyListeners();
 
-    await _repositorio.sincronizarUsuarios();
-    _usuarios = await _repositorio.obterUsuarios();
-
-    _carregando = false;
-    notifyListeners();
+    try {
+      await _repositorio.sincronizarUsuarios();
+      _usuarios = await _repositorio.obterUsuarios();
+    } finally {
+      _carregando = false;
+      notifyListeners();
+    }
   }
 }

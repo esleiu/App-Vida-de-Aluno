@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:app_vida_de_aluno/provedores/provedor_usuario.dart';
 import 'package:app_vida_de_aluno/telas/tela_aluno.dart';
 import 'package:app_vida_de_aluno/telas/tela_professor.dart';
-import 'package:app_vida_de_aluno/telas/tela_cadastro.dart';
+import 'package:app_vida_de_aluno/widgets/campo_texto_customizado.dart';
+import 'package:app_vida_de_aluno/widgets/botao_principal.dart';
 
 class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
@@ -23,10 +24,7 @@ class _TelaLoginState extends State<TelaLogin> {
 
     if (nome.isEmpty || senha.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Color(0xFFF7C8E0),
-          content: Text('Preencha o nome e a senha'),
-        ),
+        const SnackBar(backgroundColor: Colors.redAccent, content: Text('Preencha os campos')),
       );
       return;
     }
@@ -36,23 +34,17 @@ class _TelaLoginState extends State<TelaLogin> {
         (u) => u.nome.toLowerCase() == nome.toLowerCase() && u.senha == senha,
       );
 
-      if (usuario.isProfessor) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TelaProfessor(usuario: usuario)),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TelaAluno(usuario: usuario)),
-        );
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => usuario.isProfessor 
+            ? TelaProfessor(usuario: usuario) 
+            : TelaAluno(usuario: usuario)
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Color(0xFFF7C8E0),
-          content: Text('Nome ou senha incorretos!'),
-        ),
+        const SnackBar(backgroundColor: Colors.redAccent, content: Text('Acesso negado!')),
       );
     }
   }
@@ -60,57 +52,36 @@ class _TelaLoginState extends State<TelaLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE5D1FA),
+      backgroundColor: const Color(0xFF2196F3),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: const Icon(Icons.school_rounded, size: 80, color: Color(0xFF6DA9E4)),
-              ),
-              const SizedBox(height: 24),
+              const Icon(Icons.school_rounded, size: 100, color: Colors.white),
+              const SizedBox(height: 16),
               const Text(
                 'Vida de Aluno',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.black87),
+                style: TextStyle(fontSize: 36, fontWeight: FontWeight.w900, color: Colors.white),
               ),
               const SizedBox(height: 40),
-              TextField(
+              CampoTextoCustomizado(
                 controller: _controleNome,
-                decoration: const InputDecoration(
-                  hintText: 'Nome Completo',
-                  prefixIcon: Icon(Icons.person_outline),
-                ),
+                hintText: 'Nome Completo',
+                icon: Icons.person_outline,
               ),
               const SizedBox(height: 16),
-              TextField(
+              CampoTextoCustomizado(
                 controller: _controleSenha,
+                hintText: 'Senha (ID)',
+                icon: Icons.lock_outline,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'Senha',
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
               ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _tentarLogin,
-                  child: const Text('ENTRAR'),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TelaCadastro()),
-                  );
-                },
-                child: const Text('Novo por aqui? Cadastre-se'),
+              const SizedBox(height: 32),
+              BotaoPrincipal(
+                texto: 'ENTRAR',
+                onPressed: _tentarLogin,
               ),
             ],
           ),
